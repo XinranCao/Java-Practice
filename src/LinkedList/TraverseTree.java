@@ -70,7 +70,7 @@ public class TraverseTree {
         int currCount = 0; // 当前层数中，目前有多少个节点
         int max = -1; // 拥有最多节点层数中，总共有多少节点
 
-        // 先将头节点的信息加入queue和hashmap中
+        // 先将根节点的信息加入queue和hashmap中
         queue.add(root);
         map.put(root, currDepth);
         TreeNode curr = null;
@@ -197,7 +197,7 @@ public class TraverseTree {
         // 用于反向取出所有节点并打印，记录的是后序遍历的相反顺序
         Stack<TreeNode> reverse = new Stack<>();
 
-        // 将头放入栈中
+        // 将根放入栈中
         stack.add(root);
 
         TreeNode curr = null;
