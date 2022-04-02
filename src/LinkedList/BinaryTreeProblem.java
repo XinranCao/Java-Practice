@@ -3,178 +3,66 @@ package LinkedList;
 public class BinaryTreeProblem {
 
     /**
-     * 包含两个信息：节点总个数，最大深度
-     * 在判断是否为满二叉树的递归函数中使用
-     */
-    public static class ReturnDataFull {
-        public int count;
-        public int height;
-
-        public ReturnDataFull(int n, int h) {
-            count = n;
-            height = h;
-        }
-    }
-
-    /**
-     * 判断以二叉树是否为满二叉树
-     * 满二叉树： 树的节点个数n，最大深度为k，满足 2 ^ k - 1 = n
+     * 寻找一棵树中，中序遍历时，一给定节点的下一个遍历节点。
      * 
-     * @param root
+     * @param node
      * @return
      */
-    public static boolean isFull(TreeNode root) {
-        if (root == null) {
-            return true;
+    public static TreeNode findSuccessor(TreeNode node) {
+        if (node == null) {
+            return node;
         }
-        ReturnDataFull res = checkFull(root);
 
-        // 1 << h 等于 2 ^ h
-        return 1 << res.height == res.count + 1;
+        // 记录本节点的父节点
+        TreeNode parent = node.parent;
+        if (node.right != null) { // 如果本节点有右子树，那么右子树中最左边的节点就是下一个遍历节点
+            node = node.right;
+            // 寻找右子树中最左节点
+            while (node.left != null) {
+                node = node.left;
+            }
+            return node;
+        } else {
+            // 如果没有右子树，本节点所在的子树是某个节点的左子树，或者本节点是树的最右节点
+            // 这两种情况下，都向上寻找，找到第一个node是parent左子树的情况，如果没有，则为null
+            while (parent != null && parent.left != node) {
+                node = parent;
+                parent = parent.parent;
+            }
+            return parent;
+        }
     }
 
     /**
-     * 判断以root为根的子树是否为满二叉树
+     * 寻找两个node最低的公共祖先
+     * 默认给定的两个node都在同一颗数中
      * 
      * @param root
-     * @return ReturnDataFull (count: 子树节点数, height：子树最大深度)
+     * @param node_1
+     * @param node_2
+     * @return 递归时：返回null代表无信息，返回某节点，代表此节点可能是此子树中两个节点的公共祖先
      */
-    public static ReturnDataFull checkFull(TreeNode root) {
-        if (root == null) {
-            return new ReturnDataFull(0, 0); // 空节点的最大深度为0，节点个数也为0
+    public static TreeNode findLeastCommonAncestor(TreeNode root, TreeNode node_1, TreeNode node_2) {
+
+        if (root == null || root == node_1 || root == node_2) {
+            // 如果走到null，返回null。如果找到node_1或者node_2，返回此节点
+            return root;
         }
 
-        // 分别得到左右两个子树的信息
-        ReturnDataFull leftRes = checkFull(root.left);
-        ReturnDataFull rightRes = checkFull(root.right);
+        // 从左右两个子树分别继续寻找
+        TreeNode leftRes = findLeastCommonAncestor(root.left, node_1, node_2);
+        TreeNode rightRes = findLeastCommonAncestor(root.right, node_1, node_2);
 
-        int count = leftRes.count + rightRes.count + 1; // root为根的子树中包含的节点个数为左右两个子树节点总个数之和再+1
-        int height = Math.max(leftRes.height, rightRes.height) + 1; // root为根的子树最大深度为左右两个子树最大深度再+1
-
-        return new ReturnDataFull(count, height);
-    }
-
-    /**
-     * 包含三个信息：是否为搜索二叉树、子树最大值、子树最小值
-     * 在判断是否为搜索二叉树的递归函数中使用
-     */
-    public static class ReturnDataBST {
-        public boolean isBTS;
-        public int min;
-        public int max;
-
-        public ReturnDataBST(boolean is, int mn, int mx) {
-            isBTS = is;
-            min = mn;
-            max = mx;
-        }
-    }
-
-    /**
-     * 判断以二叉树是否为搜索二叉树 binary search tree
-     * BST: 对于任意一个节点，左子树所有节点均小于这一节点，右子树所有及诶单均大于这一节点
-     * 
-     * @param root
-     * @return
-     */
-    public static boolean isBST(TreeNode root) {
-        if (root == null) {
-            return true;
-        }
-        // 递归方法判断
-        return checkBST(root).isBTS;
-    }
-
-    /**
-     * 判断以root为根的子树是否为搜索二叉树
-     * 
-     * @param root
-     * @return ReturnDataBTS(isBTS：是否为搜索二叉树，min：子树的最小值，max：子树的最大值)
-     */
-    public static ReturnDataBST checkBST(TreeNode root) {
-        // 如果节点为空，返回null
-        if (root == null) {
-            return null;
-        }
-        int min = root.value; // 以root为根的子树的最小值
-        int max = root.value; // 以root为根的子树的最大值
-
-        // 分别得到左右两个子树的具体信息
-        ReturnDataBST leftRes = checkBST(root.left);
-        ReturnDataBST rightRes = checkBST(root.right);
-
-        // 如果左子树有信息，并且：左子树不是索索二叉树 或者 左子树的最大值大于root值
-        // 则以root为根的子树不是平衡二叉树，判断为false，返回。
-        if (leftRes != null && (!leftRes.isBTS || leftRes.max >= min)) {
-            return new ReturnDataBST(false, min, max);
-        }
-        // 如果右子树有信息，并且：右子树不是索索二叉树 或者 右子树的最大值大于root值
-        // 则以root为根的子树不是平衡二叉树，判断为false，返回。
-        if (rightRes != null && (!rightRes.isBTS || rightRes.min <= max)) {
-            return new ReturnDataBST(false, min, max);
+        if (leftRes != null && rightRes != null) {
+            // 如果左右两个子树分别都有信息，代表本节点就是两个node的最低公共祖先
+            return root;
         }
 
-        // 上面两个判断结束后，左右两个子树都一定为平衡二叉树
-        // 接下来更新以root为根子树的最大值和最小值
-        // 如果有左子树，那么最小值为左子树的最小值（左子树的最小值不可能等于或大于root的值，上面的判断已排除过）
-        if (leftRes != null) {
-            min = leftRes.min;
-        }
-        // 如果有右子树，那么最大值为右子树的最大值（右子树的最大值不可能等于或小于root的值，上面的判断已排除过）
-        if (rightRes != null) {
-            max = rightRes.max;
-        }
-        // 返回判断为true，以及以root为根的子树的最大值和最小值
-        return new ReturnDataBST(true, min, max);
-    }
-
-    /**
-     * 判断二叉树是否是平衡二叉树
-     * 
-     * @param root
-     * @return
-     */
-    public static boolean isBalanced(TreeNode root) {
-        if (root == null) {
-            return true;
-        }
-        // 具体判断的递归函数
-        return checkBalance(root) < 0 ? false : true;
-    }
-
-    /**
-     * 通过递归方式判断以root为根的二叉树是否是平衡二叉树
-     * 平衡二叉树：任意一个节点，左右两个子树的最大深度，差值小于2
-     * 
-     * @param root
-     * @return -1 代表不是平衡二叉树，<= 0 代表子树的最大深度
-     */
-    public static int checkBalance(TreeNode root) {
-        if (root == null) { // 如果为空节点，返回深度为0
-            return 0;
-        }
-
-        // 分别找出左右子树的最大深度
-        int leftRes = checkBalance(root.left);
-        int rightRes = checkBalance(root.right);
-
-        // 如果任意一个子树不是平衡二叉树，那么当前节点的子树也不是
-        if (leftRes < 0 || rightRes < 0) {
-            return -1;
-        }
-
-        // 如果左右两个子树的最大深度，差值小于2，返回最大深度+1
-        if (Math.abs(leftRes - rightRes) < 2) {
-            return Math.max(leftRes, rightRes) + 1;
-        }
-
-        // 如果两个子树最大深度，差值大于等于2，则当前节点的额子树不是平衡二叉树
-        return -1;
-
+        // 如果以上情况不成立，则左右两个子树有一个有信息，返回这个信息
+        return leftRes != null ? leftRes : rightRes;
     }
 
     public static void main(String[] args) {
-
         TreeNode root = new TreeNode(0);
         TreeNode node_1 = new TreeNode(1);
         TreeNode node_2 = new TreeNode(2);
@@ -184,6 +72,15 @@ public class BinaryTreeProblem {
         TreeNode node_6 = new TreeNode(6);
         TreeNode node_7 = new TreeNode(7);
         TreeNode node_8 = new TreeNode(8);
+        TreeNode node_9 = new TreeNode(9);
+        TreeNode node_10 = new TreeNode(10);
+        TreeNode node_11 = new TreeNode(11);
+        TreeNode node_12 = new TreeNode(12);
+        TreeNode node_13 = new TreeNode(13);
+        TreeNode node_14 = new TreeNode(14);
+        TreeNode node_15 = new TreeNode(15);
+        TreeNode node_16 = new TreeNode(16);
+        TreeNode node_17 = new TreeNode(17);
 
         root.left = node_1;
         root.right = node_2;
@@ -191,11 +88,43 @@ public class BinaryTreeProblem {
         node_1.right = node_4;
         node_2.left = node_5;
         node_2.right = node_6;
-        node_3.right = node_7;
-        node_6.left = node_8;
+        node_3.left = node_7;
+        node_3.right = node_8;
+        node_4.left = node_9;
+        node_4.right = node_10;
+        node_5.left = node_11;
+        node_5.right = node_12;
+        node_6.left = node_13;
+        node_6.right = node_14;
+        node_10.right = node_15;
+        node_14.left = node_16;
+        node_15.left = node_17;
 
-        System.out.println(isBalanced(root));
-        System.out.println(isBST(root));
-        System.out.println(isFull(root));
+        node_1.parent = root;
+        node_2.parent = root;
+        node_3.parent = node_1;
+        node_4.parent = node_1;
+        node_5.parent = node_2;
+        node_6.parent = node_2;
+        node_7.parent = node_3;
+        node_8.parent = node_3;
+        node_9.parent = node_4;
+        node_10.parent = node_4;
+        node_11.parent = node_5;
+        node_12.parent = node_5;
+        node_13.parent = node_6;
+        node_14.parent = node_6;
+        node_15.parent = node_10;
+        node_16.parent = node_14;
+        node_17.parent = node_15;
+
+        System.out.println("least common panrent is: " + findLeastCommonAncestor(root, node_14, node_11).value);
+
+        TreeNode successor = findSuccessor(node_14);
+        if (successor == null) {
+            System.out.println(node_14.value + " has no successor");
+        } else {
+            System.out.println("successor of " + node_14.value + " is : " + successor.value);
+        }
     }
 }
