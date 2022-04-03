@@ -1,4 +1,4 @@
-package LinkedList;
+package Tree;
 
 public class TreeNode {
     public int value;

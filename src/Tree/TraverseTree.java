@@ -1,4 +1,4 @@
-package LinkedList;
+package Tree;
 
 import java.util.*;
 
