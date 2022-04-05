@@ -3,6 +3,114 @@ package Greedy;
 import java.util.*;
 
 public class GreedyAlgoritms {
+
+    /**
+     * N皇后问题
+     * 
+     * @param num
+     * @param mode “quick”：位运算优化代码。或其他：普通解
+     * @return 返回总共有多少种放置queen的方案
+     */
+    public static int queenProblem(int num, String mode) {
+        if (num < 1) {
+            return 0;
+        }
+
+        if (mode == "quick") {
+            // quick mode只支持<=32的皇后问题，因为整数只有32位，位运算利用的是2进制做记录
+            if (num > 32) {
+                System.out.println("quick algorithm only solve num <= 32");
+                return 0;
+            }
+            // -1的2进制是32个1
+            int limit = num == 32 ? -1 : (1 << num) - 1;
+            return numQueenRowNQuick(limit, 0, 0, 0);
+        }
+        int[] record = new int[num];
+        return numQueenRowN(0, record, num);
+    }
+
+    /**
+     * N皇后问题，普通的暴力求解方法
+     * 在常数时间的操作上，利用位运算优化。但总时间依然是 O(N^N) 级别
+     * 
+     * @param limit      2进制位数上，从右到左依次有N个1，代表这是N皇后问题，棋盘允许N列上可以放置queen
+     * @param colLimit   之前已放置的所有queen所在的列，这行的queen都不能放置。2进制位上，1代表不能放置，0可以放置。
+     * @param leftLimit  之前已放置的所有queen向左下延伸的斜线，这行的queen都不能放置。2进制位上，1代表不能放置，0可以放置。
+     * @param rightLimit 之前已放置的所有queen向右下延伸的斜线，这行的queen都不能放置。2进制位上，1代表不能放置，0可以放置。
+     * @return
+     */
+    public static int numQueenRowNQuick(int limit, int colLimit, int leftLimit, int rightLimit) {
+        // 如果colLimit前N为都是1（与limit相同）则代表N列上都已放置queen，合理放置所有queen的方案+1
+        if (limit == colLimit) {
+            return 1;
+        }
+        int count = 0;
+        // 这一行所有queen可以放置的位置，2进制位数上为1的位置可以放置，0不可以放置
+        // col、left、right三个相互或运算再取反，得出的2进制数上，1代表可以放置，0代表不可以放置
+        // 再与limit与运算，去除N位向左的所有1
+        int possible = limit & (~(colLimit | leftLimit | rightLimit));
+        int rightMostOne = 0;
+        // 将这行所有可能放置的位置进行尝试
+        while (possible != 0) {
+            // 取出最右边第一个1，即第一个可能放置的位置
+            rightMostOne = possible & (~possible + 1);
+            // 更新需要尝试的位置
+            possible -= rightMostOne;
+            // 从下一行继续尝试
+            count += numQueenRowNQuick(
+                    limit,
+                    colLimit | rightMostOne, // 这一行在rightMostOne位置放置了queen，更新colLimit
+                    (leftLimit | rightMostOne) << 1, // 这一行在rightMostOne位置放置了queen，更新leftLimit。所有位置向左移动1，（斜线向左下）
+                    (rightLimit | rightMostOne) >>> 1); // 这一行在rightMostOne位置放置了queen，更新rightLimit。所有位置向右移动1，（斜线向右下）
+            // >>>代表无符号右移，左边补0
+        }
+        return count;
+    }
+
+    /**
+     * N皇后问题，普通的暴力求解方法
+     * 
+     * @param currRow 当前行
+     * @param record  记录已放置queen位置
+     * @param row     总共有多少行
+     * @return
+     */
+    public static int numQueenRowN(int currRow, int[] record, int row) {
+        if (currRow == row) { // 如果当前行index为总行数，代表已走出棋盘，所有queen都合理放置
+            return 1; // 所以成功的放置方案+1
+        }
+        int count = 0;
+        // 依次尝试在每一列放置queen是否可行，共有多少可行方案
+        for (int i = 0; i < row; i++) {
+            if (queenValid(record, currRow, i)) { // 如果再i列放置queen可行
+                record[currRow] = i; // 记录queen位置
+                count += numQueenRowN(currRow + 1, record, row); // 去下一行寻找下一个queen放置位置
+            }
+        }
+        return count;
+    }
+
+    /**
+     * 判断row这行中，col列是否可以放置queen（不与之前放置的queen位置冲突）
+     * 
+     * @param record 用来记录每行中queen的位置，如：record[3] = 0 代表在第4行第1列有一个queen
+     * @param row
+     * @param col
+     * @return
+     */
+    public static boolean queenValid(int[] record, int row, int col) {
+        // 对于每一个之前放置过的queen
+        for (int i = 0; i < row; i++) {
+            // 如果即将放置的queen与已放置的queen在同列，或者处于同一斜线上，则这个queen的位置并不合规。
+            if (record[i] == col // 判断在同一斜线的方法：行位置差与列位置差相同的话，处在45°斜线上
+                    || (Math.abs(record[i] - col) == Math.abs(i - row))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * 一个整数流，用于解决【随时新加入一个数到一个已知数组中，立马获取这个数组的中位数】问题
      */
@@ -271,6 +379,8 @@ public class GreedyAlgoritms {
         System.out.println("median: " + numbers.insertAndGetMedian(4));
         System.out.println("median: " + numbers.insertAndGetMedian(5));
         System.out.println("median: " + numbers.insertAndGetMedian(6));
+
+        System.out.println("# of queens: " + queenProblem(14, "quick"));
     }
 
 }
