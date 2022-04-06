@@ -4,6 +4,14 @@ import java.util.*;
 
 public class RecursiveSolution {
 
+    /**
+     * 背包问题
+     * 每个物品有重量和价值，在不超过背包总承受重量的情况下，能在背包里放下价值多少的物品
+     * 
+     * @param weights   // 物品的重量数组
+     * @param values    // 物品的价值数组
+     * @param maxWeight // 背包最大承重
+     */
     public static void largestValue(int[] weights, int[] values, int maxWeight) {
         if (maxWeight == 0
                 || weights == null || values == null
@@ -12,26 +20,45 @@ public class RecursiveSolution {
             System.out.println("invalie input");
             return;
         }
-
         System.out.println("max value: " + largestValueRecursion(weights, values, maxWeight, 0, 0));
     }
 
+    /**
+     * 背包问题的递归解
+     * 
+     * @param weights
+     * @param values
+     * @param maxWeight
+     * @param i          // 当前处理的物品index
+     * @param currWeight // 当前已放入背包的总重量
+     * @return // 返回目前背包中物品的总价值
+     */
     public static int largestValueRecursion(int[] weights, int[] values, int maxWeight, int i, int currWeight) {
-
+        // 当遍历完数组后，不可能有更多价值，返回0
         if (i == weights.length) {
             return 0;
         }
+        // 如果加入当前物品时，总重量超过背包总承重
+        // 当前物品不放入背包，并尝试下一个物品
         if (currWeight + weights[i] > maxWeight) {
-            return 0;
+            return largestValueRecursion(weights, values, maxWeight, i + 1, currWeight);
         }
-        int currValue = 0;
 
-        currValue += Math.max(largestValueRecursion(weights, values, maxWeight, i + 1, currWeight),
+        // 加入当前物品，或不加入当前物品的前提下，尝试下一个物品，并对比两种情况，返回两者中可取得的最大价值
+        // 如果不加入当前物品，总重量不增加，取得的价值完全有剩余物品是否放入背包决定
+        // 如果加入当前物品，当前物品重量加入总重量中，取得的价值由之后的物品是否放入背包的价值加上当前物品价值组成
+        return Math.max(largestValueRecursion(weights, values, maxWeight, i + 1, currWeight),
                 values[i] + largestValueRecursion(weights, values, maxWeight, i + 1, currWeight + weights[i]));
-        return currValue;
     }
 
+    /**
+     * 将数字转换为字母字符串，1-26分别对应A-Z，打印所有可能。
+     * 如：111可以转换为AAA，AK，KA。
+     * 
+     * @param input
+     */
     public static void numConvertStr(String input) {
+        // 将输入的字符串转换为字符数组
         char[] arr = input.toCharArray();
         System.out.println("original array: [ " + String.valueOf(arr) + " ]");
         System.out.print("possible convertion: ");
@@ -39,33 +66,54 @@ public class RecursiveSolution {
         System.out.println();
     }
 
+    /**
+     * 数字转换字母的递归解
+     * 
+     * @param arr // 储存目前为止处理完成的结果
+     * @param i   // 当前处理字符的index
+     */
     public static void numConvertStr(char[] arr, int i) {
         if (i == arr.length) {
+            // 当index等于arr长度时，代表所有字符处理完毕，打印结果
             System.out.print("[ " + String.valueOf(arr) + " ] ");
             return;
         }
+        // 如果当前字符为0，没有字母可以与其对应，不存在任何转换，终止
         if (arr[i] == '0') {
             return;
-        } else if (arr[i] == '1') {
+        } else if (arr[i] == '1') { // 如果当前字符为1
+            // 可能性1：直接将这一位转换为A
+            // 暂存当前字符，并继续处理index + 1 位置的字符
             arr[i] = 'A';
             numConvertStr(arr, i + 1);
+            // 处理完毕后，还原数组，以便尝试其他可能性
             arr[i] = '1';
 
+            // 可能性2：这一位与下一位组成一个二位数，可能从10-19
+            // 如果当前是最后一位字符，则不存在可能性2，终止。
             if (i + 1 == arr.length) {
                 return;
             }
+            // 否则，将下一位暂存
             char temp = arr[i + 1];
             int num = Character.getNumericValue(temp);
+            // 根据对应关系，将i 和 i+1数字组合成二位数
+            // 并根据字母对应关系，10-19对应J-S，转换i以及i + 1 位字符
             arr[i] = ' ';
             arr[i + 1] = (char) (num + 'J');
+            // 继续处理index + 2位置的字符
             numConvertStr(arr, i + 2);
+            // 处理完毕后，还原i和i + 1位
             arr[i] = '1';
             arr[i + 1] = temp;
         } else if (arr[i] == '2') {
+            // 同上，有两种可能性
+            // 可能性1：将2单独转换
             arr[i] = 'B';
             numConvertStr(arr, i + 1);
             arr[i] = '2';
 
+            // 可能性2：i和i + 1位组合成二位数，可能从20-26
             if (i + 1 == arr.length) {
                 return;
             }
@@ -80,6 +128,7 @@ public class RecursiveSolution {
             arr[i] = '2';
             arr[i + 1] = temp;
         } else {
+            // 如果当前为3-9, 对应字母转换，然后继续处理下一位
             char temp = arr[i];
             int num = Character.getNumericValue(temp) - 1;
             arr[i] = (char) (num + 'A');
