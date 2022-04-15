@@ -1,0 +1,168 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch MonotoneStack",
+            "request": "launch",
+            "mainClass": "MonotoneStack.MonotoneStack",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch Deque",
+            "request": "launch",
+            "mainClass": "Deque.Deque",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch GraphProblem",
+            "request": "launch",
+            "mainClass": "Graph.GraphProblem",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch GreedyAlgoritms",
+            "request": "launch",
+            "mainClass": "Greedy.GreedyAlgoritms",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch HashProblem",
+            "request": "launch",
+            "mainClass": "Hash.HashProblem",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch KMP",
+            "request": "launch",
+            "mainClass": "KMP.KMP",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch CopyLinkedList",
+            "request": "launch",
+            "mainClass": "LinkedList.CopyLinkedList",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch IntersectLinkedList",
+            "request": "launch",
+            "mainClass": "LinkedList.IntersectLinkedList",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch Palindorme",
+            "request": "launch",
+            "mainClass": "LinkedList.Palindorme",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch Manacher",
+            "request": "launch",
+            "mainClass": "Manacher.Manacher",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch RecursiveSolution",
+            "request": "launch",
+            "mainClass": "Recursion.RecursiveSolution",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch HeapSort",
+            "request": "launch",
+            "mainClass": "Sorting.HeapSort",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch MergeSort",
+            "request": "launch",
+            "mainClass": "Sorting.MergeSort",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch QuickSort",
+            "request": "launch",
+            "mainClass": "Sorting.QuickSort",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch RadixSort",
+            "request": "launch",
+            "mainClass": "Sorting.RadixSort",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch Test",
+            "request": "launch",
+            "mainClass": "Sorting.Test",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch BinaryTreeProblem",
+            "request": "launch",
+            "mainClass": "Tree.BinaryTreeProblem",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch CheckBinaryTree",
+            "request": "launch",
+            "mainClass": "Tree.CheckBinaryTree",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch TraverseTree",
+            "request": "launch",
+            "mainClass": "Tree.TraverseTree",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch TrieTree",
+            "request": "launch",
+            "mainClass": "Tree.TrieTree",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
+            "name": "Launch UnionFindSet",
+            "request": "launch",
+            "mainClass": "UnionFind.UnionFindSet",
+            "projectName": "Java Practice_188554d0"
+        }
+    ]
+}
