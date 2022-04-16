@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch DynamicProgramming",
+            "request": "launch",
+            "mainClass": "DP.DynamicProgramming",
+            "projectName": "Java Practice_188554d0"
+        },
+        {
+            "type": "java",
             "name": "Launch MonotoneStack",
             "request": "launch",
             "mainClass": "MonotoneStack.MonotoneStack",
